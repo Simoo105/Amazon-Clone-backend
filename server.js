@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 const User = require('./models/user');
 
@@ -24,11 +25,12 @@ mongoose.connect(process.env.DATABASE,
 );
 
 //Middlewares
+app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get('/', (req, res) => {
+/* app.get('/', (req, res) => {
     res.json("hello amazon clone");
 });
 
@@ -45,7 +47,29 @@ app.post("/", (req, res) => {
             res.json('Successfully saved');
         }
     })
-})
+}) */
+
+// require apis
+const productRoutes = require('./routes/product');
+const categoryRoutes = require('./routes/category');
+const ownerRoutes = require('./routes/owner');
+const userRoutes = require('./routes/auth');
+const reviewRoutes = require('./routes/review');
+const helpRoutes = require('./routes/helpful');
+const addressRoutes = require('./routes/address');
+const paymentRoutes = require('./routes/payment');
+const orderRoutes = require('./routes/order');
+
+
+app.use('/api', productRoutes);
+app.use('/api', categoryRoutes);
+app.use('/api', ownerRoutes);
+app.use('/api', userRoutes);
+app.use('/api', reviewRoutes);
+app.use('/api', helpRoutes);
+app.use('/api', addressRoutes);
+app.use('/api', paymentRoutes);
+app.use('/api', orderRoutes);
 
 app.listen(3000, (err) => {
     if (err) {
